@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>rock-paper-scissors</title>
+  </head>
+  <body>
+    <script>
+
+      function getPlayerChoice(input){
+        let userInput = input.toLowerCase();
+          if (userInput === "rock" || userInput === "paper" || userInput === "scissors"){return userInput;}
+          else {console.log( "The move does not exist");}
+      }
+
+      const moves = ["rock", "paper", "scissors"];
+      function getComputerChoice(){
+      return moves[(Math.floor(Math.random() * moves.length))];
+      }
+
+
+      function playRound(playerSelection, computerSelection) {
+      // if player and computer puts the same move, its a tie
+        if (playerSelection === computerSelection ){
+          console.log("Its a tie!");}
+      // 1. if player puts rock
+        else if (playerSelection === "rock" && computerSelection === "scissors" ){
+          console.log("You win, rock beats scissors!");}
+
+        else if (playerSelection === "rock" && computerSelection === "paper"){
+        console.log("You lose,  paper beats rock!");}
+        
+      // 2. if player puts scissors
+        else if (playerSelection === "scissors" ){
+          if(computerSelection === "rock"){console.log ("You lose, rock beats scissors!");}
+          else if(computerSelection === "paper"){console.log("You win, scissors beats paper!");}
+        }
+       
+      // 2. if player puts paper
+        else if (playerSelection === "paper"){
+          if (computerSelection === "scissors"){console.log ("You lose, scissors beats paper!");}
+          else if (computerSelection === "rock"){console.log ("You win, paper beats rock!");}
+        }
+        
+      }
+
+      const playerSelection = getPlayerChoice(prompt("Enter your move"));
+      const computerSelection = getComputerChoice();
+
+      console.log("Player : " + playerSelection);
+      console.log("Computer : " + computerSelection);
+
+      playRound(playerSelection, computerSelection);
+      
+      
+
+      </script>
+    
+  </body>
+</html> 
+
