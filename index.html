@@ -2,56 +2,162 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css"/>
     <title>rock-paper-scissors</title>
   </head>
   <body>
+    <h1>Let's play rock, paper, scissors. Choose your move.</h1>
+
+    <div id="choices">
+      <input id="rock" type="image" src="rock.png" width="150" height="150"/>
+      <input id="paper" type="image" src="paper.png" width="150" height="150" />
+      <input id="scissors" type="image" src="scissors.png" width="150" height="150"/>
+    </div>
+
+    <div id="scores">
+      <p id="playerScore"></p>
+      <p id="compScore"></p>
+    </div>
+
+    <div id="winner">
+      <p id="you"></p>
+      <p id="comp"></p>
+      <p id="draw"></p>
+    </div>
+
+    <button id="restart">RESTART</button>
+    
+
     <script>
 
-      function getPlayerChoice(input){
-        let userInput = input.toLowerCase();
-          if (userInput === "rock" || userInput === "paper" || userInput === "scissors"){return userInput;}
-          else {console.log( "The move does not exist");}
+      const choices = document.querySelectorAll("#choices");
+      const scores = document.getElementById("scores");
+      const restart = document.getElementById("restart");
+      const winner = document.getElementById("winner");
+
+
+      let playerScore = 0;
+      function incrementPlayer() {
+          if( playerScore < 5 ){
+              playerScore++
+          } else if (compScore === 5){
+            return;
+          }
+      }
+
+
+      let compScore  = 0;
+      function incrementComp(){
+        if( compScore < 5){
+          compScore++
+        } else if (playerScore === 5){
+          return;
+        }
+      }
+
+      restart.addEventListener("click", () =>{
+        if(playerScore <= 5 || compScore <= 5){
+          window.location.reload();
+          return false;
+        }
+        
+      });
+
+    function endGame(){
+        const youWon = document.getElementById("you");
+        const compWon = document.getElementById("comp");
+        
+
+        if (playerScore === 5 && compScore < 5){
+          youWon.innerHTML = "You Win!"
+          return;
+        } else if (compScore === 5 && playerScore <5){
+          compWon.innerHTML = "Computer Wins!"
+          return;
+        } 
+        
+      }
+
+      function playGame(e){
+        const playerSelection = e.target.id;
+        const compSelection = getComputerChoice();
+
+        // Check if the game has already been won
+        if (playerScore === 5 || compScore === 5) {
+          return; 
+        }
+        const game = playRound(playerSelection, compSelection);
+
+        console.log(playerSelection, compSelection, game, playerScore, compScore);
       }
 
       const moves = ["rock", "paper", "scissors"];
       function getComputerChoice(){
-      return moves[(Math.floor(Math.random() * moves.length))];
-      }
-
-
-      function playRound(playerSelection, computerSelection) {
-      // if player and computer puts the same move, its a tie
-        if (playerSelection === computerSelection ){
-          console.log("Its a tie!");}
-      // 1. if player puts rock
-        else if (playerSelection === "rock" && computerSelection === "scissors" ){
-          console.log("You win, rock beats scissors!");}
-
-        else if (playerSelection === "rock" && computerSelection === "paper"){
-        console.log("You lose,  paper beats rock!");}
-        
-      // 2. if player puts scissors
-        else if (playerSelection === "scissors" ){
-          if(computerSelection === "rock"){console.log ("You lose, rock beats scissors!");}
-          else if(computerSelection === "paper"){console.log("You win, scissors beats paper!");}
-        }
-       
-      // 2. if player puts paper
-        else if (playerSelection === "paper"){
-          if (computerSelection === "scissors"){console.log ("You lose, scissors beats paper!");}
-          else if (computerSelection === "rock"){console.log ("You win, paper beats rock!");}
-        }
-        
-      }
-
-      const playerSelection = getPlayerChoice(prompt("Enter your move"));
-      const computerSelection = getComputerChoice();
-
-      console.log("Player : " + playerSelection);
-      console.log("Computer : " + computerSelection);
-
-      playRound(playerSelection, computerSelection);
+      return moves[Math.floor(Math.random() * moves.length)];
       
+      }
+
+
+      function playRound(player, computer) {
+        const draw = document.getElementById("draw");
+        draw.innerHTML = "";
+
+        if (player === computer){
+          
+          draw.innerHTML = "DRAW";
+          return;
+        }
+      
+        else if (player === "rock"){
+          if (computer === "scissors"){
+            incrementPlayer();
+            return "player";
+          }
+          else {
+            incrementComp();
+            return "computer";
+          }  
+        }
+
+        else if (player === "paper"){
+          if (computer === "scissors"){
+            incrementComp();
+            return "computer";
+          }
+          else {
+            incrementPlayer();
+            return "player";
+          }
+        }
+        
+        else if (player === "scissors" ){
+          if(computer === "rock"){
+            incrementComp();
+            return "computer";
+          }
+          else{
+            incrementPlayer();
+            return "player";
+          }
+        }
+        
+      }
+      function scoreBoard(){
+        const playerScorePara = document.getElementById("playerScore");
+        const compScorePara = document.getElementById("compScore");
+
+        playerScorePara.innerHTML = `Player : ${playerScore} `;
+        compScorePara.innerHTML = `Computer : ${compScore}`;
+        }
+      
+      
+
+      choices.forEach(choice => choice.addEventListener("click", (event) =>{
+        playGame(event);
+        scoreBoard()
+        endGame()
+      } ));
+
       
 
       </script>
